@@ -1,0 +1,43 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Tasks collection security rules
+    match /tasks/{taskId} {
+      
+      // Helper function to check if user is authenticated
+      function isAuthenticated() {
+        return request.auth != null;
+      }
+
+      // Helper function to check if authenticated user owns the existing task
+      function isOwner() {
+        return isAuthenticated() && resource.data.userId == request.auth.uid;
+      }
+
+      // Helper function to validate status string
+      function isValidStatus(status) {
+        return status in ['Planned', 'In Progress', 'Complete'];
+      }
+
+      // Read rules: User can only read their own tasks
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+
+      // Create rules: User can create a task if authenticated, owner of new task, and status is valid
+      allow create: if isAuthenticated()
+        && request.resource.data.userId == request.auth.uid
+        && isValidStatus(request.resource.data.status)
+        && request.resource.data.title is string
+        && request.resource.data.title.size() > 0
+        && request.resource.data.title.size() <= 100;
+
+      // Update rules: User can only update their own task, cannot change userId, and must provide valid status
+      allow update: if isOwner()
+        && request.resource.data.userId == resource.data.userId
+        && isValidStatus(request.resource.data.status);
+
+      // Delete rules: Disabled per requirements
+      allow delete: if false;
+    }
+  }
+}
