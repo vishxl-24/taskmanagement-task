@@ -40,12 +40,12 @@ export default function TaskCard({ task }) {
   const getStatusCardClass = (statusStr) => {
     switch (statusStr) {
       case 'In Progress':
-        return 'task-card-in-progress';
+        return 'task-card status-card-progress';
       case 'Complete':
-        return 'task-card-complete';
+        return 'task-card status-card-complete';
       case 'Planned':
       default:
-        return 'task-card-planned';
+        return 'task-card status-card-planned';
     }
   };
 
@@ -62,45 +62,48 @@ export default function TaskCard({ task }) {
   };
 
   return (
-    <div className={`task-card ${getStatusCardClass(status)} ${updating ? 'task-card-updating' : ''}`}>
-      <div className="task-card-header">
-        <h3 className="task-title">{task.title}</h3>
-        <span className={getStatusBadgeClass(status)}>{status}</span>
-      </div>
-
-      {task.description && (
-        <p className="task-description">{task.description}</p>
-      )}
-
-      {error && (
-        <div className="card-error-inline">
-          <small>{error}</small>
-        </div>
-      )}
-
-      <div className="task-card-footer">
-        <div className="status-selector-group">
-          <label htmlFor={`status-select-${task.id}`} className="status-label">
-            Status:
-          </label>
-          <select
-            id={`status-select-${task.id}`}
-            className="status-select"
-            value={status}
-            onChange={handleStatusChange}
-            disabled={updating}
-          >
-            {ALLOWED_STATUSES.map((st) => (
-              <option key={st} value={st}>
-                {st}
-              </option>
-            ))}
-          </select>
-          {updating && <span className="spinner micro-spinner"></span>}
+    <div className={`${getStatusCardClass(status)} ${updating ? 'task-card-updating' : ''}`}>
+      <div className="status-top-bar"></div>
+      <div className="task-card-inner">
+        <div className="task-card-header">
+          <h3 className="task-title">{task.title}</h3>
+          <span className={getStatusBadgeClass(status)}>{status}</span>
         </div>
 
-        <div className="task-meta">
-          <span className="created-date">Created: {formatDate(task.createdAt)}</span>
+        {task.description && (
+          <p className="task-description">{task.description}</p>
+        )}
+
+        {error && (
+          <div className="card-error-inline">
+            <small>{error}</small>
+          </div>
+        )}
+
+        <div className="task-card-footer">
+          <div className="status-selector-group">
+            <label htmlFor={`status-select-${task.id}`} className="status-label">
+              Status:
+            </label>
+            <select
+              id={`status-select-${task.id}`}
+              className={`status-select status-select-${status.toLowerCase().replace(/\s+/g, '-')}`}
+              value={status}
+              onChange={handleStatusChange}
+              disabled={updating}
+            >
+              {ALLOWED_STATUSES.map((st) => (
+                <option key={st} value={st}>
+                  {st}
+                </option>
+              ))}
+            </select>
+            {updating && <span className="spinner micro-spinner"></span>}
+          </div>
+
+          <div className="task-meta">
+            <span className="created-date">Created: {formatDate(task.createdAt)}</span>
+          </div>
         </div>
       </div>
     </div>
