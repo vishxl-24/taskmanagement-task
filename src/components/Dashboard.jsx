@@ -3,12 +3,14 @@ import { signOutUser } from '../services/authService';
 import { subscribeToUserTasks } from '../services/taskService';
 import TaskCard from './TaskCard';
 import TaskForm from './TaskForm';
+import HelpModal from './HelpModal';
 
 export default function Dashboard({ user }) {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showTaskForm, setShowTaskForm] = useState(false);
+  const [showHelpModal, setShowHelpModal] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
 
   useEffect(() => {
@@ -55,6 +57,15 @@ export default function Dashboard({ user }) {
         </div>
 
         <div className="navbar-user">
+          <button
+            className="btn btn-outline btn-sm help-nav-btn"
+            onClick={() => setShowHelpModal(true)}
+            title="Help & Support"
+          >
+            <span className="help-question-mark">?</span>
+            <span className="help-btn-text">Help & Support</span>
+          </button>
+
           <div className="user-profile">
             {user.photoURL ? (
               <img
@@ -69,6 +80,7 @@ export default function Dashboard({ user }) {
             )}
             <span className="user-name">{user.displayName || user.email || 'User'}</span>
           </div>
+
           <button
             id="logout-btn"
             className="btn btn-outline btn-sm"
@@ -163,6 +175,11 @@ export default function Dashboard({ user }) {
           user={user}
           onClose={() => setShowTaskForm(false)}
         />
+      )}
+
+      {/* Help & Support Modal */}
+      {showHelpModal && (
+        <HelpModal onClose={() => setShowHelpModal(false)} />
       )}
     </div>
   );

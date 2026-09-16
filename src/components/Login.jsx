@@ -45,7 +45,7 @@ export default function Login() {
         <div className="hero-content">
           <div className="hero-badge">
             <span className="badge-pulse"></span>
-            Graduate Placement Assessment Project
+               TASKS
           </div>
           <h1 className="hero-title">
             Organize Tasks with <span className="title-highlight">Clarity & Speed</span>
