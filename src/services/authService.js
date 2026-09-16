@@ -10,16 +10,24 @@ export const signInWithGoogle = async () => {
     return { user: result.user, error: null };
   } catch (error) {
     console.error('Error during Google sign in:', error);
-    let errorMessage = 'Failed to sign in with Google. Please try again.';
+    let errorMessage = 'Failed to sign in with Google.';
+    
     if (error.code === 'auth/popup-closed-by-user') {
       errorMessage = 'Sign-in popup was closed before completing.';
     } else if (error.code === 'auth/cancelled-popup-request') {
       errorMessage = 'Sign-in popup request was cancelled.';
     } else if (error.code === 'auth/network-request-failed') {
       errorMessage = 'Network error during sign in. Please check your internet connection.';
-    } else if (error.code === 'auth/invalid-api-key' || error.code === 'auth/unauthorized-domain') {
-      errorMessage = 'Firebase auth is not properly configured. Check your .env file and Firebase Console settings.';
+    } else if (error.code === 'auth/operation-not-allowed') {
+      errorMessage = 'Google Sign-In is not enabled in Firebase Console. Please go to Authentication > Sign-in method and enable Google.';
+    } else if (error.code === 'auth/unauthorized-domain') {
+      errorMessage = 'Current domain is not authorized in Firebase Console. Go to Authentication > Settings > Authorized domains and add this domain.';
+    } else if (error.code === 'auth/invalid-api-key') {
+      errorMessage = 'Invalid API key. Check VITE_FIREBASE_API_KEY in your .env file or Vercel environment variables.';
+    } else if (error.message) {
+      errorMessage = `${error.message} (${error.code || 'auth-error'})`;
     }
+
     return { user: null, error: errorMessage };
   }
 };
