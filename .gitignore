@@ -13,8 +13,10 @@ dist
 dist-ssr
 *.local
 
-# Environment variables
+# Environment variables & rules ignored per user instruction
 .env
+.env.example
+firestore.rules
 
 # Editor directories and files
 .vscode/*
