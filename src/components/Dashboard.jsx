@@ -4,7 +4,7 @@ import { subscribeToUserTasks } from '../services/taskService';
 import TaskCard from './TaskCard';
 import TaskForm from './TaskForm';
 
-export default function Dashboard({ user }) {
+export default function Dashboard({ user, theme, onToggleTheme }) {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -55,6 +55,15 @@ export default function Dashboard({ user }) {
         </div>
 
         <div className="navbar-user">
+          <button
+            className="theme-toggle-btn"
+            onClick={onToggleTheme}
+            aria-label="Toggle Theme"
+            title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
+          >
+            {theme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode'}
+          </button>
+
           <div className="user-profile">
             {user.photoURL ? (
               <img
@@ -69,6 +78,7 @@ export default function Dashboard({ user }) {
             )}
             <span className="user-name">{user.displayName || user.email || 'User'}</span>
           </div>
+
           <button
             id="logout-btn"
             className="btn btn-outline btn-sm"

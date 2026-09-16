@@ -6,6 +6,14 @@ import Dashboard from './components/Dashboard';
 export default function App() {
   const [user, setUser] = useState(null);
   const [authChecking, setAuthChecking] = useState(true);
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('taskflow_theme') || 'dark';
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('taskflow_theme', theme);
+  }, [theme]);
 
   useEffect(() => {
     const unsubscribe = subscribeToAuthState((currentUser) => {
@@ -15,6 +23,10 @@ export default function App() {
 
     return () => unsubscribe();
   }, []);
+
+  const handleToggleTheme = () => {
+    setTheme((prevTheme) => (prevTheme === 'dark' ? 'light' : 'dark'));
+  };
 
   if (authChecking) {
     return (
@@ -27,7 +39,11 @@ export default function App() {
 
   return (
     <div className="app-container">
-      {user ? <Dashboard user={user} /> : <Login />}
+      {user ? (
+        <Dashboard user={user} theme={theme} onToggleTheme={handleToggleTheme} />
+      ) : (
+        <Login theme={theme} onToggleTheme={handleToggleTheme} />
+      )}
     </div>
   );
 }

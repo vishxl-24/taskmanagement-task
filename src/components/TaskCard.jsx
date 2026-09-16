@@ -37,6 +37,18 @@ export default function TaskCard({ task }) {
     }
   };
 
+  const getStatusCardClass = (statusStr) => {
+    switch (statusStr) {
+      case 'In Progress':
+        return 'task-card-in-progress';
+      case 'Complete':
+        return 'task-card-complete';
+      case 'Planned':
+      default:
+        return 'task-card-planned';
+    }
+  };
+
   const getStatusBadgeClass = (statusStr) => {
     switch (statusStr) {
       case 'In Progress':
@@ -50,7 +62,7 @@ export default function TaskCard({ task }) {
   };
 
   return (
-    <div className={`task-card ${updating ? 'task-card-updating' : ''}`}>
+    <div className={`task-card ${getStatusCardClass(status)} ${updating ? 'task-card-updating' : ''}`}>
       <div className="task-card-header">
         <h3 className="task-title">{task.title}</h3>
         <span className={getStatusBadgeClass(status)}>{status}</span>
